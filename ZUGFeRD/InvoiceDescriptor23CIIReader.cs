@@ -288,7 +288,7 @@ namespace s2industries.ZUGFeRD
             XmlNodeList creditorFinancialAccountNodes = doc.SelectNodes("//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount", nsmgr);
             XmlNodeList creditorFinancialInstitutions = doc.SelectNodes("//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeeSpecifiedCreditorFinancialInstitution", nsmgr);
 
-            int numberOfAccounts = Math.Min(creditorFinancialAccountNodes.Count, creditorFinancialInstitutions.Count);
+            int numberOfAccounts = Math.Max(creditorFinancialAccountNodes.Count, creditorFinancialInstitutions.Count);
 
             for (int i = 0; i < numberOfAccounts; i++)
             {
