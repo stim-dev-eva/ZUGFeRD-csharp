@@ -1,0 +1,33 @@
+name: Build and Publish ZUGFeRD package to GitHub
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore ZUGFeRD/ZUGFeRD.csproj
+
+    - name: Build
+      run: dotnet build ZUGFeRD/ZUGFeRD.csproj --configuration Release --no-restore -f net8.0
+
+    - name: Pack the project with auto-incremented version
+      run: dotnet pack ZUGFeRD/ZUGFeRD.csproj --configuration Release --no-build --output ./bin -p:PackageVersion='1.0.0'
+
+    - name: Push the package to NuGet
+      run: dotnet nuget push *.nupkg --source https://nuget.pkg.github.com/stim-dev-eva/index.json --api-key ${{ secrets.NUGET_STIM_API_KEY }}
+      working-directory: bin/     
